@@ -11,11 +11,11 @@ class TodoService {
   }
 
   bindTodoListChanged(callback) {
-    this.onTodoListChanged = callback;
+    this.onTodoListChanged1 = callback;
   }
 
   _commit(todos) {
-    this.onTodoListChanged(todos);
+    this.onTodoListChanged1(todos);
     localStorage.setItem("todos", JSON.stringify(todos));
   }
 

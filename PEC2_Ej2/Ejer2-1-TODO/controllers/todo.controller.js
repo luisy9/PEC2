@@ -35,8 +35,8 @@ class TodoController {
     this.service.editTodo(id, todoText);
   };
 
-  handleDeleteTodo = (id) => {
-    this.service.deleteTodo(id);
+  handleDeleteTodo = (_id) => {
+    this.service.deleteTodo(_id);
   };
 
   handleToggleTodo = (id) => {
