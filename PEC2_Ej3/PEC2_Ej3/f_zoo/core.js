@@ -73,24 +73,76 @@ function animalCount(species) {
 function animalMap(options) {
   // your code here
   const mapOptions = {};
-  data.animals.forEach((e) => {
-    if(mapOptions[e.location]){
-      mapOptions[e.location] = [...(mapOptions[e.location]), e.name];
-    }else{
-      mapOptions[e.location] = [e.name];
-    }
-  });
+  if (options === undefined) {
+    data.animals.forEach((e) => {
+      if (mapOptions[e.location]) {
+        mapOptions[e.location] = [...mapOptions[e.location], e.name];
+      } else {
+        mapOptions[e.location] = [e.name];
+      }
+    });
+    return mapOptions;
+  }
 
-  return mapOptions
+  // if (options?.includeNames === true) {
+  //   const objectArray = {};
+  //   data.animals.forEach((e) => {
+  //     if (!objectArray[e.location]) {
+  //       objectArray[e.location] = {};
+  //     }
+  //     e.residents.forEach((a) => {
+  //       if (objectArray[e.location][e.name]) {
+  //         objectArray[e.location][e.name].push(a.name);
+  //       } else {
+  //         objectArray[e.location][e.name] = [a.name];
+  //       }
+  //     });
+  //   });
+  //   return objectArray;
+  // }
 }
 
 function animalPopularity(rating) {
   // your code here
-  
+  let popularAnimals = {};
+  if (rating === undefined) {
+    data.animals.forEach((e) => {
+      if (popularAnimals[e.popularity]) {
+        popularAnimals[e.popularity].push(e.name);
+      } else {
+        popularAnimals[e.popularity] = [e.name];
+      }
+    });
+    return popularAnimals;
+  }
+
+  if (rating !== undefined) {
+    let array = [];
+    data.animals.forEach((e) => {
+      if (e.popularity === rating) {
+        array.push(e.name);
+      }
+    });
+    return array;
+  }
 }
 
 function animalsByIds(ids) {
   // your code here
+  let array = [];
+  if (ids === undefined) {
+    return array;
+  }
+
+  if (ids !== undefined) {
+    let array = [];
+    data.animals.forEach((e) => {
+      if (e.id === ids) {
+        array.push(e);
+      }
+    });
+    return array;
+  }
 }
 
 function animalByName(animalName) {
