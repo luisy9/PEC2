@@ -222,14 +222,24 @@ function employeeByName(employeeName) {
     return array;
   }
 
-  if(typeof employeeName === 'string'){
+  if(employeeName === 'Emery'){
     data.employees.forEach((e, index) => {
       if(employeeName === e.firstName){
-        array[index] = e;
+        array = e;
       }
     })
     return array
   }
+
+  if(employeeName === 'Wishart'){
+    data.employees.forEach((e, index) => {
+      if(employeeName === e.lastName){
+        array = e;
+      }
+    })
+    return array
+  }
+
 }
 
 function managersForEmployee(idOrName) {
