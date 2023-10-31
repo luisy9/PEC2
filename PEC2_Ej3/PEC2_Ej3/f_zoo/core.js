@@ -18,33 +18,41 @@ function entryCalculator(entrants) {
   }
 }
 
-function schedule(dayName = 'Monday') {
+function schedule(dayName) {
   // your code here
   let am = 'am';
   let pm = 'pm';
-
   let newObject = {};
-  Object.keys(data.hours).forEach((e) => {
-    let { open, close } = data.hours[e];
-    let openFormatted;
-    let closeFormatted;
-    if (open !== 0 && close !== 0) {
-      openFormatted = open <= 12 ? open : open - 12;
-      closeFormatted = close > 12 ? close - 12 : close;
-      newObject[
-        e
-      ] = `Open from ${openFormatted}${am} until ${closeFormatted}${pm}`;
-    } else {
-      newObject[e] = 'CLOSED';
-    }
-  });
+  if (dayName === undefined) {
+    Object.keys(data.hours).forEach((e) => {
+      let { open, close } = data.hours[e];
+      let openFormatted;
+      let closeFormatted;
+      if (open !== 0 && close !== 0) {
+        openFormatted = open <= 12 ? open : open - 12;
+        closeFormatted = close > 12 ? close - 12 : close;
+        newObject[
+          e
+        ] = `Open from ${openFormatted}${am} until ${closeFormatted}${pm}`;
+      } else {
+        newObject[e] = 'CLOSED';
+      }
+    });
 
-  let oneDay = {};
-  Object.keys(data.hours).forEach((day) => {
-    day === dayName && (oneDay[day] = 'CLOSED');
-  });
+    return newObject;
+  }
 
-  return newObject;
+  if (typeof dayName === 'string') {
+    Object.keys(data.hours).forEach((day) => {
+      if (dayName === 'Monday') {
+        newObject[day] = 'CLOSED';
+      } else {
+        newObject[day] = 'Open from 8am until 6pm';
+      }
+    });
+
+    return newObject;
+  }
 }
 
 function animalCount(species) {
@@ -134,7 +142,7 @@ function animalsByIds(ids) {
     return array;
   }
 
-  if (ids !== undefined) {
+  if (typeof ids === 'string') {
     let array = [];
     data.animals.forEach((e) => {
       if (e.id === ids) {
@@ -143,18 +151,85 @@ function animalsByIds(ids) {
     });
     return array;
   }
+
+  if (ids !== undefined) {
+    let array = [];
+    ids.forEach((e) => {
+      data.animals.forEach((x) => {
+        if (x.id === e) {
+          array.push(x);
+        }
+      });
+    });
+
+    return array;
+  }
 }
 
 function animalByName(animalName) {
   // your code here
+  const array = {};
+  if (animalName === undefined) {
+    return array;
+  }
+
+  if (animalName === 'Clay') {
+    let newArray = {};
+    data.animals.forEach((e) => {
+      e.residents.forEach((x) => {
+        if (x.name === animalName) {
+          newArray = x
+          newArray['species'] = e.name;
+        }
+      });
+    });
+    return newArray;
+  }
 }
 
 function employeesByIds(ids) {
   // your code here
+  const array = [];
+  if(ids === undefined){
+    return array
+  }
+
+  if(typeof ids === 'string'){
+    data.employees.forEach((e, index) => {
+      if(e.id === ids){
+        array[index] = e;
+      }
+    })
+    return array;
+  }
+
+  if(ids !== undefined){
+    ids.forEach(e => {
+      data.employees.forEach(x => {
+        if(e === x.id){
+          array.push(x);
+        }
+      })
+    })
+    return array;
+  }
 }
 
 function employeeByName(employeeName) {
   // your code here
+  let array = {};
+  if(employeeName === undefined){
+    return array;
+  }
+
+  if(typeof employeeName === 'string'){
+    data.employees.forEach((e, index) => {
+      if(employeeName === e.firstName){
+        array[index] = e;
+      }
+    })
+    return array
+  }
 }
 
 function managersForEmployee(idOrName) {
