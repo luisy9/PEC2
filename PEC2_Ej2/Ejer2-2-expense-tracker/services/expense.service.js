@@ -38,8 +38,9 @@ class ExpenseService {
     this.expense = this.expense.map((e) =>
       e.id === id
         ? new Expense({ ...e, text: updateText, num: cadenaSinMas })
-        : this.expense
+        : e
     );
+
     this._commit(this.expense);
   }
 }

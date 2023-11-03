@@ -1,7 +1,9 @@
 /* Creamos funcion async que pasa el name y el tiempo de espera.
 */
 async function findOne(name, timeOut) {
+  //Inicializamos el setTimeOut
   setTimeout(() => {
+    //Creamos un array que tiene dos objetos dentro, y esto dentro de la función timeout
     const users = [
       {
         name: 'Carlos',
@@ -12,6 +14,7 @@ async function findOne(name, timeOut) {
         rol: 'Boss',
       },
     ];
+    //Realizo un try catch por si hay un error que salte el error por consola de Element not found
     try {
       //Hacemos el find de el array que tenemos y lo comparamos con el name que le pasamos
       const element = users.find((index) => index.name === name);
@@ -36,5 +39,5 @@ async function nameSearch() {
 
   await findOne('Carlos', 2500);
 }
-
+//Ejecutamos la funcion que llamara a las otras dos funciones con async
 nameSearch();

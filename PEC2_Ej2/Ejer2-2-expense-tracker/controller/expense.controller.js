@@ -14,12 +14,12 @@ class ExpenseController {
     this.view.submitForm(this.handleAdd);
     this.view.bindDeleteExpend(this.handleDeleteHistory);
     this.view.updateExpends(this.handleUpdateExpense);
-    this.view.bind;
+    // this.view.bind;
 
     this.onHistoryChanged(this.service.expense);
   }
 
-  onHistoryChanged = (expense) => {
+  onHistoryChanged = expense => {
     this.view.displayHistory(expense);
   };
 

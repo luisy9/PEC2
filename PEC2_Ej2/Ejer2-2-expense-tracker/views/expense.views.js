@@ -85,13 +85,13 @@ class ExpenseView {
       this.form
     );
     this.root.append(this.container);
+    this.sing = '';
+    this.pText = '';
+    this.pNum = 0;
+    this.localStorageTransactions = JSON.parse(localStorage.getItem('expense'));
 
-    this.localStorageTransactions = JSON.parse(
-      localStorage.getItem('transactions')
-    );
-
-    this.transactions =
-      localStorage.getItem('transactions') !== null
+    this.expense =
+      localStorage.getItem('expense') !== null
         ? this.localStorageTransactions
         : [];
 
@@ -116,6 +116,10 @@ class ExpenseView {
     this.inputText.value = '';
   }
 
+  _resetInputNum() {
+    this.inputAmount.value = '';
+  }
+
   submitForm(handler) {
     this.form.addEventListener('submit', (event) => {
       event.preventDefault();
@@ -124,14 +128,70 @@ class ExpenseView {
         this.inputAmount.value.trim() === ''
       ) {
         alert('Please add a text and amount');
-      }
-      if (this._textExpend && this._numExpend) {
-        handler(this._textExpend, this._numExpend);
+      } else {
+        const text = this._textExpend;
+        const num = parseFloat(this._numExpend);
+        // Asegúrate de que los gastos se almacenen como números negativos
+        handler(text, num);
         this._resetInput();
+        this._resetInputNum();
       }
     });
   }
-
+  // displayHistory(expense) {
+  //   this.ul.classList.add('list');
+    
+  //   // Reiniciar los totales a cero
+  //   this.incomeTotal = 0;
+  //   this.expenseTotal = 0;
+  
+  //   while (this.ul.firstChild) {
+  //     this.ul.removeChild(this.ul.firstChild);
+  //   }
+  
+  //   expense.forEach((expe) => {
+  //     if (expense.length === 0) {
+  //       return;
+  //     } else {
+  //       const li = document.createElement('li');
+  //       li.id = expe.id;
+  //       this.sing = expe.num < 0 ? '-' : '+';
+  //       li.classList.add(expe.num < 0 ? 'minus' : 'plus');
+  //       this.pText = document.createElement('p');
+  //       this.pNum = document.createElement('p');
+  //       this.pText.contentEditable = true;
+  //       this.pText.classList.add('editable');
+  //       this.pText.classList.add('text');
+  //       this.pText.textContent = `${expe.text}`;
+  //       this.pNum.contentEditable = true;
+  //       this.pNum.classList.add('editable');
+  //       this.pNum.classList.add('num');
+  //       this.pNum.textContent = `${this.sing}${expe.num}`;
+  //       li.append(this.pText, this.pNum);
+  //       const buttonDelete = document.createElement('button', 'delete');
+  //       buttonDelete.classList.add('delete-btn');
+  //       buttonDelete.textContent = 'X';
+  //       li.append(buttonDelete);
+  //       this.ul.append(li);
+  
+  //       // Calcula los totales aquí
+  //       if (expe.num > 0) {
+  //         this.incomeTotal += expe.num;
+  //       } else {
+  //         this.expenseTotal += expe.num;
+  //       }
+  
+  //       this.inputText.value = '';
+  //       this.inputAmount.value = '';
+  //     }
+  //   });
+  
+  //   this.h1.textContent = `$${(this.incomeTotal + this.expenseTotal).toFixed(2)}`;
+  //   console.log(this.incomeTotal);
+  //   this.money_plus.textContent = `+$${this.incomeTotal.toFixed(2)}`;
+  //   this.Moneyminus.textContent = `-$${Math.abs(this.expenseTotal).toFixed(2)}`;
+  // }
+  
   displayHistory(expense) {
     const transaction = {
       id: this._id,
@@ -140,6 +200,8 @@ class ExpenseView {
     };
 
     this.ul.classList.add('list');
+    this.incomeTotal = 0;
+    this.expenseTotal = 0;
     while (this.ul.firstChild) {
       this.ul.removeChild(this.ul.firstChild);
     }
@@ -156,9 +218,11 @@ class ExpenseView {
         this.pNum = document.createElement('p');
         this.pText.contentEditable = true;
         this.pText.classList.add('editable');
+        this.pText.classList.add('text');
         this.pText.textContent = `${expe.text}`;
         this.pNum.contentEditable = true;
         this.pNum.classList.add('editable');
+        this.pNum.classList.add('num');
         this.pNum.textContent = `${this.sing}${expe.num}`;
         li.append(this.pText, this.pNum);
         const buttonDelete = document.createElement('button', 'delete');
@@ -166,11 +230,67 @@ class ExpenseView {
         buttonDelete.textContent = 'X';
         li.append(buttonDelete);
         this.ul.append(li);
+
+        // Calcula los totales aquí
+        if (expe.num > 0) {
+          this.incomeTotal += expe.num;
+        } else {
+          this.expenseTotal += expe.num;
+        }
+
         this.inputText.value = '';
         this.inputAmount.value = '';
       }
     });
+
+    // Asegúrate de que this.incomeTotal y this.expenseTotal sean números
+    this.incomeTotal = parseFloat(this.incomeTotal);
+    this.expenseTotal = parseFloat(this.expenseTotal);
+
+    this.h1.textContent = `$${(this.incomeTotal + this.expenseTotal).toFixed(
+      2
+    )}`;
   }
+  //   console.log(this.incomeTotal);
+  //   this.money_plus.textContent = `+$${this.incomeTotal.toFixed(2)}`;
+  //   this.Moneyminus.textContent = `-$${Math.abs(this.expenseTotal).toFixed(2)}`;
+    //     li.id = expe.id;
+    //     this.sing = expe.num < 0 ? '-' : '+';
+    //     li.classList.add(expe.num < 0 ? 'minus' : 'plus');
+    //     this.pText = document.createElement('p');
+    //     this.pNum = document.createElement('p');
+    //     this.pText.contentEditable = true;
+    //     this.pText.classList.add('editable');
+    //     this.pText.classList.add('text');
+    //     this.pText.textContent = `${expe.text}`;
+    //     this.pNum.contentEditable = true;
+    //     this.pNum.classList.add('editable');
+    //     this.pNum.classList.add('num');
+    //     this.pNum.textContent = `${this.sing}${expe.num}`;
+    //     li.append(this.pText, this.pNum);
+    //     const buttonDelete = document.createElement('button', 'delete');
+    //     buttonDelete.classList.add('delete-btn');
+    //     buttonDelete.textContent = 'X';
+    //     li.append(buttonDelete);
+    //     this.ul.append(li);
+    //     if (expe.num > 0) {
+    //       this.incomeTotal += expe.num;
+    //     } else {
+    //       this.expenseTotal -= expe.num;
+    //     }
+    //     this.inputText.value = '';
+    //     this.inputAmount.value = '';
+    //   }
+    // });
+
+    // this.incomeTotal = parseFloat(this.incomeTotal);
+    // this.expenseTotal = parseFloat(this.expenseTotal);
+
+    // this.h1.textContent = `$${(this.incomeTotal - this.expenseTotal).toFixed(2)}`;
+    // console.log(this.incomeTotal);
+    // this.money_plus.textContent = `+$${this.incomeTotal.toFixed(2)}`;
+    // this.Moneyminus.textContent = `-$${this.expenseTotal.toFixed(2)}`;
+  // }
 
   bindDeleteExpend(handler) {
     this.ul.addEventListener('click', (event) => {
@@ -183,18 +303,35 @@ class ExpenseView {
 
   _initLocalListeners() {
     this.ul.addEventListener('input', (event) => {
-      if (event.target.className === 'editable') {
-        this.temporaryText = this.pText.textContent;
-        this.temporaryNum = this.pNum.textContent;
+      if (event.target.classList.contains('editable')) {
+        const listItem = event.target.parentElement;
+        this.temporaryText =
+          listItem.querySelector('.editable.text').textContent;
+        this.temporaryNum = listItem.querySelector('.editable.num').textContent;
+        // console.log(this.temporaryNum, this.temporaryText)
       }
     });
   }
 
   updateExpends(handler) {
     this.ul.addEventListener('focusout', (event) => {
-      if ((this.temporaryText || this.temporaryNum) || (this.temporaryText && this.temporaryNum)) {
-        const id = event.target.parentElement.id;
-        handler(id, this.temporaryText, this.temporaryNum);
+      const target = event.target;
+      if (target.classList.contains('editable')) {
+        const listItem = target.parentElement;
+        const id = listItem.id;
+        // const textElement = listItem.querySelector('.editable.text');
+        // const numElement = listItem.querySelector('.editable.num');
+        // const text = textElement.textContent;
+        // const num = numElement.textContent;
+
+        const sign = this.temporaryNum.startsWith('-') ? '-' : '+';
+        console.log(sign);
+        const cleanedNum = this.temporaryNum.replace(/[\+\-]/g, '');
+        const finalNum = `${sign}${cleanedNum}`;
+        console.log(id);
+        handler(id, this.temporaryText, finalNum);
+        this.temporaryText = '';
+        this.temporaryNum = 0;
       }
     });
   }

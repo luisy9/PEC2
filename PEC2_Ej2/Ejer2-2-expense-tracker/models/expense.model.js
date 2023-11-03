@@ -6,12 +6,12 @@
 
 class Expense {
   constructor({ text, num }) {
-    this.id = this.uuuidv4();
+    this.id = this.uuidv4();
     this.text = text;
     this.num = num;
   }
 
-  uuuidv4() {
+  uuidv4() {
     return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, (c) =>
       (
         c ^

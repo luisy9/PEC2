@@ -1,5 +1,5 @@
 /* Creamos funcion que pasa el name que le pasamos y
-devuelve una Promise
+devuelve una nueva Promise
 */
 async function findOne(name, timeOut) {
   return new Promise((resolve, reject) => {
@@ -31,7 +31,8 @@ async function findOne(name, timeOut) {
 
 //Creamos esta funcion async ya que estamos ejecutando una funcion con un Promise
 /*
-  Luego realizamos las llamadas a las funciones con await. 
+  Luego realizamos las llamadas a las funciones con await.
+  Luego mediante el resolve y el catch sabremos si ha funcionado la tarea que tenia las funciones.
 */
 async function nameSearch() {
   await findOne('Luis', 2000)
@@ -52,4 +53,5 @@ async function nameSearch() {
   console.log('adios');
 }
 
+//Inicamos la funcion para que se ejecuten las llamadas a la funcion principal
 nameSearch();
