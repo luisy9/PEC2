@@ -23,8 +23,8 @@ class ExpenseController {
     this.view.displayHistory(expense);
   };
 
-  handleAdd = (text, num) => {
-    this.service.addHistory(text, num);
+  handleAdd = ({id, text, num}) => {
+    this.service.addHistory({id,text, num});
   };
 
   handleUpdateExpense = (id, text, num) => {

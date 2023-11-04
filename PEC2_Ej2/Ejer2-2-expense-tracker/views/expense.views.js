@@ -88,15 +88,15 @@ class ExpenseView {
     this.sing = '';
     this.pText = '';
     this.pNum = 0;
+
     this.localStorageTransactions = JSON.parse(localStorage.getItem('expense'));
 
     this.expense =
       localStorage.getItem('expense') !== null
         ? this.localStorageTransactions
         : [];
-
     this.temporaryText = '';
-    this.temporaryNum = 0;
+    this.temporaryNum = '';
     this._initLocalListeners();
   }
 
@@ -129,76 +129,19 @@ class ExpenseView {
       ) {
         alert('Please add a text and amount');
       } else {
-        const text = this._textExpend;
-        const num = parseFloat(this._numExpend);
-        // Asegúrate de que los gastos se almacenen como números negativos
-        handler(text, num);
+        const transaction = {
+          id: this._id.toString(),
+          text: this._textExpend.toString(),
+          num: this._numExpend,
+        };
+        handler({ ...transaction });
         this._resetInput();
         this._resetInputNum();
       }
     });
   }
-  // displayHistory(expense) {
-  //   this.ul.classList.add('list');
-    
-  //   // Reiniciar los totales a cero
-  //   this.incomeTotal = 0;
-  //   this.expenseTotal = 0;
-  
-  //   while (this.ul.firstChild) {
-  //     this.ul.removeChild(this.ul.firstChild);
-  //   }
-  
-  //   expense.forEach((expe) => {
-  //     if (expense.length === 0) {
-  //       return;
-  //     } else {
-  //       const li = document.createElement('li');
-  //       li.id = expe.id;
-  //       this.sing = expe.num < 0 ? '-' : '+';
-  //       li.classList.add(expe.num < 0 ? 'minus' : 'plus');
-  //       this.pText = document.createElement('p');
-  //       this.pNum = document.createElement('p');
-  //       this.pText.contentEditable = true;
-  //       this.pText.classList.add('editable');
-  //       this.pText.classList.add('text');
-  //       this.pText.textContent = `${expe.text}`;
-  //       this.pNum.contentEditable = true;
-  //       this.pNum.classList.add('editable');
-  //       this.pNum.classList.add('num');
-  //       this.pNum.textContent = `${this.sing}${expe.num}`;
-  //       li.append(this.pText, this.pNum);
-  //       const buttonDelete = document.createElement('button', 'delete');
-  //       buttonDelete.classList.add('delete-btn');
-  //       buttonDelete.textContent = 'X';
-  //       li.append(buttonDelete);
-  //       this.ul.append(li);
-  
-  //       // Calcula los totales aquí
-  //       if (expe.num > 0) {
-  //         this.incomeTotal += expe.num;
-  //       } else {
-  //         this.expenseTotal += expe.num;
-  //       }
-  
-  //       this.inputText.value = '';
-  //       this.inputAmount.value = '';
-  //     }
-  //   });
-  
-  //   this.h1.textContent = `$${(this.incomeTotal + this.expenseTotal).toFixed(2)}`;
-  //   console.log(this.incomeTotal);
-  //   this.money_plus.textContent = `+$${this.incomeTotal.toFixed(2)}`;
-  //   this.Moneyminus.textContent = `-$${Math.abs(this.expenseTotal).toFixed(2)}`;
-  // }
-  
-  displayHistory(expense) {
-    const transaction = {
-      id: this._id,
-      text: this.inputText.value,
-      num: this.inputAmount.value,
-    };
 
+  displayHistory(expense) {
     this.ul.classList.add('list');
     this.incomeTotal = 0;
     this.expenseTotal = 0;
@@ -206,91 +149,60 @@ class ExpenseView {
       this.ul.removeChild(this.ul.firstChild);
     }
 
+    const amounts = expense
+      .map((expe) => parseFloat(expe.num))
+      .filter((num) => !isNaN(num));
+
+    const total = amounts
+      .reduce((total, current) => total + current, 0)
+      .toFixed(2);
+
+    const incomes = amounts
+      .filter((item) => item > 0)
+      .reduce((acc, item) => acc + item, 0)
+      .toFixed(2);
+
+    const expenses = amounts
+      .filter((item) => item < 0)
+      .reduce((acc, item) => acc + item, 0)
+      .toFixed(2);
+
     expense.forEach((expe) => {
-      if (expense.length === 0) {
-        return;
-      } else {
-        const li = document.createElement('li');
-        li.id = expe.id;
-        this.sing = expe.num < 0 ? '-' : '+';
-        li.classList.add(expe.num < 0 ? 'minus' : 'plus');
-        this.pText = document.createElement('p');
-        this.pNum = document.createElement('p');
-        this.pText.contentEditable = true;
-        this.pText.classList.add('editable');
-        this.pText.classList.add('text');
-        this.pText.textContent = `${expe.text}`;
-        this.pNum.contentEditable = true;
-        this.pNum.classList.add('editable');
-        this.pNum.classList.add('num');
-        this.pNum.textContent = `${this.sing}${expe.num}`;
-        li.append(this.pText, this.pNum);
-        const buttonDelete = document.createElement('button', 'delete');
-        buttonDelete.classList.add('delete-btn');
-        buttonDelete.textContent = 'X';
-        li.append(buttonDelete);
-        this.ul.append(li);
-
-        // Calcula los totales aquí
-        if (expe.num > 0) {
-          this.incomeTotal += expe.num;
+      const num = parseFloat(expe.num);
+      if (!isNaN(num)) {
+        if (expense.length === 0) {
+          return;
         } else {
-          this.expenseTotal += expe.num;
-        }
+          const li = document.createElement('li');
+          li.id = expe.id;
+          this.sing = expe.num < 0 ? '-' : '+';
+          li.classList.add(expe.num < 0 ? 'minus' : 'plus');
+          this.pText = document.createElement('p');
+          this.pNum = document.createElement('p');
+          this.pText.contentEditable = true;
+          this.pText.classList.add('editable');
+          this.pText.classList.add('text');
+          this.pText.textContent = `${expe.text}`;
+          this.pNum.contentEditable = true;
+          this.pNum.classList.add('editable');
+          this.pNum.classList.add('num');
+          this.pNum.textContent = `${this.sing}${expe.num}`;
+          li.append(this.pText, this.pNum);
+          const buttonDelete = document.createElement('button', 'delete');
+          buttonDelete.classList.add('delete-btn');
+          buttonDelete.textContent = 'X';
+          li.append(buttonDelete);
+          this.ul.append(li);
 
-        this.inputText.value = '';
-        this.inputAmount.value = '';
+          this.inputText.value = '';
+          this.inputAmount.value = '';
+        }
       }
     });
-
-    // Asegúrate de que this.incomeTotal y this.expenseTotal sean números
-    this.incomeTotal = parseFloat(this.incomeTotal);
-    this.expenseTotal = parseFloat(this.expenseTotal);
-
-    this.h1.textContent = `$${(this.incomeTotal + this.expenseTotal).toFixed(
-      2
-    )}`;
+    this.h1.innerText = total;
+    this.money_plus.innerText = incomes;
+    this.Moneyminus.innerText = expenses;
   }
-  //   console.log(this.incomeTotal);
-  //   this.money_plus.textContent = `+$${this.incomeTotal.toFixed(2)}`;
-  //   this.Moneyminus.textContent = `-$${Math.abs(this.expenseTotal).toFixed(2)}`;
-    //     li.id = expe.id;
-    //     this.sing = expe.num < 0 ? '-' : '+';
-    //     li.classList.add(expe.num < 0 ? 'minus' : 'plus');
-    //     this.pText = document.createElement('p');
-    //     this.pNum = document.createElement('p');
-    //     this.pText.contentEditable = true;
-    //     this.pText.classList.add('editable');
-    //     this.pText.classList.add('text');
-    //     this.pText.textContent = `${expe.text}`;
-    //     this.pNum.contentEditable = true;
-    //     this.pNum.classList.add('editable');
-    //     this.pNum.classList.add('num');
-    //     this.pNum.textContent = `${this.sing}${expe.num}`;
-    //     li.append(this.pText, this.pNum);
-    //     const buttonDelete = document.createElement('button', 'delete');
-    //     buttonDelete.classList.add('delete-btn');
-    //     buttonDelete.textContent = 'X';
-    //     li.append(buttonDelete);
-    //     this.ul.append(li);
-    //     if (expe.num > 0) {
-    //       this.incomeTotal += expe.num;
-    //     } else {
-    //       this.expenseTotal -= expe.num;
-    //     }
-    //     this.inputText.value = '';
-    //     this.inputAmount.value = '';
-    //   }
-    // });
-
-    // this.incomeTotal = parseFloat(this.incomeTotal);
-    // this.expenseTotal = parseFloat(this.expenseTotal);
-
-    // this.h1.textContent = `$${(this.incomeTotal - this.expenseTotal).toFixed(2)}`;
-    // console.log(this.incomeTotal);
-    // this.money_plus.textContent = `+$${this.incomeTotal.toFixed(2)}`;
-    // this.Moneyminus.textContent = `-$${this.expenseTotal.toFixed(2)}`;
-  // }
 
   bindDeleteExpend(handler) {
     this.ul.addEventListener('click', (event) => {
@@ -308,7 +220,6 @@ class ExpenseView {
         this.temporaryText =
           listItem.querySelector('.editable.text').textContent;
         this.temporaryNum = listItem.querySelector('.editable.num').textContent;
-        // console.log(this.temporaryNum, this.temporaryText)
       }
     });
   }
@@ -319,19 +230,14 @@ class ExpenseView {
       if (target.classList.contains('editable')) {
         const listItem = target.parentElement;
         const id = listItem.id;
-        // const textElement = listItem.querySelector('.editable.text');
-        // const numElement = listItem.querySelector('.editable.num');
-        // const text = textElement.textContent;
-        // const num = numElement.textContent;
-
+        this.temporaryNum = this.temporaryNum.toString();
         const sign = this.temporaryNum.startsWith('-') ? '-' : '+';
-        console.log(sign);
         const cleanedNum = this.temporaryNum.replace(/[\+\-]/g, '');
         const finalNum = `${sign}${cleanedNum}`;
         console.log(id);
         handler(id, this.temporaryText, finalNum);
         this.temporaryText = '';
-        this.temporaryNum = 0;
+        this.temporaryNum = ''; 
       }
     });
   }

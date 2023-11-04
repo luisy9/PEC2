@@ -21,8 +21,8 @@ class ExpenseService {
     localStorage.setItem('expense', JSON.stringify(expense));
   }
 
-  addHistory(text, num) {
-    this.expense.push(new Expense({ text, num }));
+  addHistory({id ,text, num}) {
+    this.expense.push(new Expense({ id ,text, num }));
 
     this._commit(this.expense);
   }
